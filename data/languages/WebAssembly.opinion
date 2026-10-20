@@ -1,0 +1,6 @@
+<opinions>
+    <constraint loader="WebAssembly" compilerSpecID="default">
+        <constraint primary="1"       processor="WebAssembly"   endian="little"    size="32" />
+        <constraint primary="2" processor="WebAssembly" endian="little" size="64" />
+    </constraint>
+</opinions>

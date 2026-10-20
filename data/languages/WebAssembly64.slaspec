@@ -1,0 +1,2 @@
+@define ADDR_SIZE 8
+@include "WebAssembly.slaspec"

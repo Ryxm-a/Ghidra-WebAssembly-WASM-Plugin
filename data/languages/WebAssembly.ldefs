@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- See Relax specification: Ghidra/Framework/SoftwareModeling/data/languages/language_definitions.rxg -->
+<language_definitions>
+   <language processor="WebAssembly"
+            endian="little"
+            size="32"
+            variant="default"
+            version="1.0"
+            slafile="WebAssembly.sla"
+            processorspec="WebAssembly.pspec"
+            id="Wasm:LE:32:default">
+    <description>WebAssembly Language Module</description>
+    <compiler name="default" spec="WebAssembly.cspec" id="default"/>
+    <compiler name="pos-stack" spec="WebAssembly-pos-stack.cspec" id="pos-stack"/>
+    <external_name tool="DWARF.register.mapping.file" name="WebAssembly.dwarf"/>
+  </language> 
+  <language processor="WebAssembly" endian="little" size="64" variant="default"
+            version="1.0" slafile="WebAssembly64.sla" processorspec="WebAssembly64.pspec"
+            id="Wasm:LE:64:default">
+    <description>WebAssembly with memory64 / table64 indices</description>
+    <compiler name="default" spec="WebAssembly64.cspec" id="default"/>
+    <compiler name="pos-stack" spec="WebAssembly64-pos-stack.cspec" id="pos-stack"/>
+    <external_name tool="DWARF.register.mapping.file" name="WebAssembly.dwarf"/>
+  </language>
+</language_definitions>
