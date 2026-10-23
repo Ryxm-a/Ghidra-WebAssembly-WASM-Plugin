@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+dist/
+
+# IDEs
+.idea/
+.project
+.classpath
+.settings/
+*.iml
+
+# Java
+*.class
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Local Ghidra configuration
+gradle.properties
