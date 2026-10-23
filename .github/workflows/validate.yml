@@ -1,0 +1,53 @@
+name: Repository validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate extension structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            README.md LICENSE extension.properties Module.manifest
+            data/languages/WebAssembly.ldefs
+            data/languages/WebAssembly.slaspec
+            data/languages/WebAssembly64.slaspec
+            data/languages/AtomicOps.sinc
+            data/languages/VectorOps.sinc
+            ghidra_scripts/analyze_dyncalls.py
+            lib/ghidra-wasm-plugin.jar
+            lib/ghidra-wasm-plugin-src.zip
+          )
+          for path in "${required[@]}"; do
+            test -e "$path" || { echo "::error file=$path::Required extension artifact is missing"; exit 1; }
+          done
+      - name: Validate metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '^name=WebAssembly$' extension.properties
+          grep -q '^version=' extension.properties
+          grep -q 'WebAssembly64' README.md
+          grep -q 'memory64' README.md
+          grep -q 'threads/atomics' README.md
+      - name: Reject accidental build/editor artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          bad="$(find . -type f \( -name '*.class' -o -name '*.swp' -o -name '.DS_Store' \) -not -path './.git/*' -print)"
+          if [ -n "$bad" ]; then
+            echo "$bad"
+            echo "::error::Generated/editor artifacts are committed"
+            exit 1
+          fi

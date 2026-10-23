@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+<title id="title">Ghidra WebAssembly</title><desc id="desc">Modern WebAssembly analysis and decompilation for Ghidra</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1020"/><stop offset="1" stop-color="#15102d"/></linearGradient>
+  <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#654ff0"/><stop offset="1" stop-color="#e5484d"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1200" height="360" rx="24" fill="url(#bg)"/>
+<g opacity=".12" stroke="#9b8cff"><path d="M0 70H1200M0 140H1200M0 210H1200M0 280H1200"/><path d="M100 0V360M250 0V360M400 0V360M550 0V360M700 0V360M850 0V360M1000 0V360M1150 0V360"/></g>
+<g transform="translate(86 76)">
+ <path d="M52 0 104 30v60l-52 30L0 90V30z" fill="none" stroke="#654ff0" stroke-width="8" filter="url(#glow)"/>
+ <path d="M28 37v47M76 37v47M28 60h48" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+ <circle cx="52" cy="60" r="8" fill="#e5484d"/>
+</g>
+<text x="235" y="130" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="58" font-weight="800" letter-spacing="-2">Ghidra WebAssembly</text>
+<text x="238" y="183" fill="#c7c9d9" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="25">Modern WASM analysis &amp; decompilation for Ghidra</text>
+<rect x="238" y="220" width="190" height="42" rx="21" fill="#654ff0"/><text x="333" y="248" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="17" font-weight="700">MEMORY64</text>
+<rect x="442" y="220" width="220" height="42" rx="21" fill="#2a2447" stroke="#654ff0"/><text x="552" y="248" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="17" font-weight="700">THREADS + ATOMICS</text>
+<rect x="676" y="220" width="118" height="42" rx="21" fill="#2a2447" stroke="#e5484d"/><text x="735" y="248" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="17" font-weight="700">SIMD</text>
+<path d="M238 294H960" stroke="url(#accent)" stroke-width="4" stroke-linecap="round"/>
+<text x="238" y="326" fill="#8f93a8" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="16">WASM → SLEIGH → P-CODE → DECOMPILER</text>
+</svg>
