@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/hero.svg" alt="Ghidra WebAssembly — Modern WASM analysis and decompilation for Ghidra" width="100%"/>
+
 # Ghidra WebAssembly
 
 ### Modern WebAssembly analysis & decompilation for Ghidra
@@ -10,10 +12,11 @@
 [![WebAssembly](https://img.shields.io/badge/WebAssembly-WASM-654FF0?style=for-the-badge&logo=webassembly&logoColor=white)](https://webassembly.org/)
 [![Release](https://img.shields.io/github/v/release/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin?style=for-the-badge)](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/releases/latest)
 [![License](https://img.shields.io/github/license/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin?style=for-the-badge)](LICENSE)
+[![Validation](https://img.shields.io/github/actions/workflow/status/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/validate.yml?branch=main&style=for-the-badge&label=validation)](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/actions/workflows/validate.yml)
 
 A maintained Ghidra extension for serious WebAssembly reverse engineering — with **memory64**, **threads/atomics**, SIMD, cross-references, C-stack recovery, P-code and Ghidra decompilation.
 
-[**Download**](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/releases/latest) · [**Install**](#-installation) · [**Capabilities**](#-capabilities) · [**Architecture**](docs/ARCHITECTURE.md) · [**Report a bug**](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/issues/new/choose)
+[**Download**](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/releases/latest) · [**Install**](#-installation) · [**Capabilities**](#-capabilities) · [**Architecture**](docs/ARCHITECTURE.md) · [**Support**](SUPPORT.md) · [**Report a bug**](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/issues/new/choose)
 
 </div>
 
