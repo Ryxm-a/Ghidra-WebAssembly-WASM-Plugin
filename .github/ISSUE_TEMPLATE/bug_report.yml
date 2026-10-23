@@ -1,0 +1,45 @@
+name: Bug report
+description: Report incorrect loading, disassembly, analysis or decompilation
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: input
+    id: ghidra
+    attributes:
+      label: Ghidra version
+      placeholder: "12.1.4"
+    validations:
+      required: true
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin version or commit
+      placeholder: "v1.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: target
+    attributes:
+      label: Target language
+      options:
+        - WebAssembly (memory32)
+        - WebAssembly64 (memory64)
+        - Unknown
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include expected and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps / minimal sample
+      description: Link or attach a redistributable minimal sample if possible.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs, screenshots or decompiler output
