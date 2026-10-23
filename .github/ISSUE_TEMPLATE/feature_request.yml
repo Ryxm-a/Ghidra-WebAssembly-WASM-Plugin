@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest a WebAssembly, Ghidra or analysis improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Reverse-engineering use case
+      description: What workflow is currently difficult or impossible?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Relevant WebAssembly proposal/specification
