@@ -1,127 +1,162 @@
-Module to load WebAssembly files into Ghidra, supporting disassembly and decompilation.
+<div align="center">
 
-## Features
+# Ghidra WebAssembly
 
-- Support for all WebAssembly 1.0 opcodes
-- Support for the threads/atomics proposal (`0xFE` opcodes) and shared memories
-- Cross-references for function calls and branches
-- Cross-references for table entries and globals containing function pointers
-- Recovery of the C stack, when the stack pointer is stored in a global variable (typical for compilers like Emscripten)
+### Modern WebAssembly analysis & decompilation for Ghidra
 
-![Sample disassembly and decompilation](sample.png)
+**Disassemble. Decompile. Navigate. Understand.**
 
-## Installing
+[![Ghidra](https://img.shields.io/badge/Ghidra-12.1.4-EA3B3B?style=for-the-badge)](https://github.com/NationalSecurityAgency/ghidra)
+[![WebAssembly](https://img.shields.io/badge/WebAssembly-WASM-654FF0?style=for-the-badge&logo=webassembly&logoColor=white)](https://webassembly.org/)
+[![Release](https://img.shields.io/github/v/release/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin?style=for-the-badge)](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/releases/latest)
+[![License](https://img.shields.io/github/license/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin?style=for-the-badge)](LICENSE)
 
-### Prebuilt Extension
+A maintained Ghidra extension for serious WebAssembly reverse engineering — with **memory64**, **threads/atomics**, SIMD, cross-references, C-stack recovery, P-code and Ghidra decompilation.
 
-The easiest way to install the plugin is as a Ghidra extension. Grab a
-[release](https://github.com/nneonneo/ghidra-wasm-plugin/releases) that is
-compatible with your version of Ghidra - for example, if you're using Ghidra
-12.0, download the file beginning with `ghidra_12.0_PUBLIC`. You don't need
-to unzip the file: simply launch Ghidra, go to "File -> Install Extensions",
-select the + icon, and select the zip file. Restart Ghidra to load the extension
-and you should be good to go. **Note:** if you upgrade your version of Ghidra,
-you will need to upgrade your plugin too.
+[**Download**](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/releases/latest) · [**Install**](#-installation) · [**Capabilities**](#-capabilities) · [**Architecture**](docs/ARCHITECTURE.md) · [**Report a bug**](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/issues/new/choose)
 
-### Custom Build
+</div>
 
-If there is no release for your version of Ghidra, or you want to install a
-modified version, you may build and install from source instead. You'll need
-Gradle and a Java compiler. Run the following commands from the root of this
-repository:
+---
 
-```bash
-export GHIDRA_INSTALL_DIR=<path to Ghidra install directory>
-gradle buildExtension
+## Why this exists
+
+WebAssembly is a typed stack machine, not a conventional native ISA. Useful reversing requires more than decoding bytes: structured control flow, value-stack context, tables, globals, linear memory, compiler-generated C stacks and function signatures all need to be represented in a form Ghidra can reason about.
+
+**Ghidra WebAssembly turns a `.wasm` module into a navigable Ghidra program.**
+
+Import a module and use the workflows you already know: disassembly, symbols, references, scripts, P-code and decompilation.
+
+This project continues the open-source Ghidra WebAssembly lineage while maintaining a modern Ghidra build and extending support for newer WebAssembly capabilities.
+
+## ✨ Capabilities
+
+| Capability | Status |
+| --- | :---: |
+| WebAssembly module loading | ✅ |
+| Disassembly + Ghidra decompilation | ✅ |
+| WebAssembly 1.0 instruction set | ✅ |
+| **memory64 / 64-bit linear-memory analysis** | ✅ |
+| **Threads / atomics (`0xFE`)** | ✅ |
+| Shared memories | ✅ |
+| SIMD instructions | ✅ |
+| Function-call & branch XREFs | ✅ |
+| Table/global function-pointer XREFs | ✅ |
+| C-stack recovery | ✅ |
+| Positive- and negative-growing C stacks | ✅ |
+| P-code analysis/emulation support | ✅ |
+| DWARF language integration | ✅ |
+| Dynamic-call/table helper scripts | ✅ |
+
+### memory32 + memory64
+
+The extension includes language definitions for conventional WebAssembly and **WebAssembly64**. The 64-bit variant models the wider linear-memory address space required by memory64 modules.
+
+### Threads + atomics
+
+The processor definitions include the `0xFE` atomic instruction family and shared-memory handling, including atomic loads/stores, read-modify-write operations, wait/notify and fences.
+
+## 🚀 Installation
+
+1. Open the [latest release](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/releases/latest).
+2. Download the extension ZIP matching the supported Ghidra version — currently **Ghidra 12.1.4**.
+3. In Ghidra choose **File → Install Extensions…**
+4. Click **+** and select the ZIP.
+5. Enable the extension and restart Ghidra.
+6. Import a `.wasm` module.
+
+> The current packaged release targets **Ghidra 12.1.4**. Ghidra extensions are version-sensitive; other releases may require a matching build.
+
+## 🔬 Analysis pipeline
+
+```text
+.wasm
+  │
+  ▼
+Module parser + loader
+  │
+  ├─ types / imports / exports
+  ├─ functions / globals
+  ├─ tables / memories
+  └─ element / data segments
+  │
+  ▼
+Wasm pre-analysis
+  │
+  ├─ value-stack context
+  ├─ structured branch targets
+  ├─ references
+  └─ C-stack recovery
+  │
+  ▼
+SLEIGH → P-code → Ghidra analysis → Decompiler
 ```
 
-`GHIDRA_INSTALL_DIR` should be the directory that contains the Ghidra
-installation, i.e. the directory containing `Extensions`, `Ghidra`, `ghidraRun`,
-`support` and so on.
+See **[Architecture](docs/ARCHITECTURE.md)** for the technical model.
 
-If all goes well, the zipped plugin will be placed in the `dist` directory and
-can be installed using "File -> Install Extensions" as before.
+## 🧰 Included scripts
 
-## Tips
+| Script | Purpose |
+| --- | --- |
+| `analyze_dyncalls.py` | Analyze Emscripten-style dynamic-call helpers and improve indirect-call references/names |
+| `rename_table_funcs.py` | Name functions using function-table positions |
+| `emulate_writev.py` | Assist WASM emulation experiments |
+| `spectest.py` | Specification-oriented test/support tooling |
 
-- Many Wasm programs, especially those compiled by Emscripten or Clang, use a
-global variable to store the C stack pointer. This plugin will attempt to
-automatically detect the C stack pointer during analysis; if it fails, you may
-need to set it yourself before performing initial analysis by setting the "C
-Stack Pointer" in the Wasm Pre-Analyzer settings.
-- By default, the C stack is assumed to grow in the negative direction, i.e.
-towards smaller addresses. However, compilers are actually free to choose either
-stack direction, and both positive and negative-growing stacks have been
-observed in real-world samples. If your C stack grows upwards (e.g. indicated by
-an add operation to the C stack pointer in the function prologue rather than a
-subtract), select the `pos-stack` compiler when importing the file, or via `Set
-Language...` on an existing file in the project window.
-- Emscripten will usually translate function pointer calls into calls to
-exported `dyncall_` functions, which take a call-type-specific index as the
-first parameter. The index is used to index a sub-section of the main function
-table (table0) to find the function to call. The included script
-`analyze_dyncalls.py` can analyze the `dyncall_` functions, extract the indices,
-and rename referenced functions according to their call type and function index
-(which will often serve as function pointer values in memory). This can be used
-to resolve function pointer references, for example.
-- Element segments may be passive, or have offset expressions that depend on
-imported globals. In this case, the element segments are not automatically
-loaded to the table. You can manually load these segments by calling
-`WasmLoader.loadElementsToTable`. For example, to load element segment #0 to
-table #1 at offset 2 in Python:
+## 🧠 Reversing tips
 
-```python
-from wasm import WasmLoader
-from wasm.analysis import WasmAnalysis
-from ghidra.util.task import ConsoleTaskMonitor
-monitor = ConsoleTaskMonitor()
-WasmLoader.loadElementsToTable(currentProgram, WasmAnalysis.getState(currentProgram).module, 0, 1, 2, monitor)
-```
-- Similarly, data segments can be manually loaded as well. For example, to load
-data segment #5 to memory #0 at offset 0x1000, do the following in Python:
+**C stack:** Emscripten/Clang-style programs commonly keep a conventional C stack pointer in a WebAssembly global. The analyzer attempts to detect it automatically. If needed, configure **C Stack Pointer** in Wasm Pre-Analyzer options before initial analysis.
 
-```python
-from wasm import WasmLoader
-from wasm.analysis import WasmAnalysis
-from ghidra.util.task import ConsoleTaskMonitor
-monitor = ConsoleTaskMonitor()
-WasmLoader.loadDataToMemory(currentProgram, WasmAnalysis.getState(currentProgram).module, 5, 0, 0x1000, monitor)
-```
+**Stack direction:** the default compiler specification assumes a downward-growing C stack. For upward-growing targets, select the `pos-stack` compiler specification.
 
-## Limitations and Known Bugs
+**Indirect calls:** WebAssembly tables frequently represent compiler-level function pointers. The included dyncall/table scripts can improve names and references for these patterns.
 
-- Currently, inlining functions (via marking them "In Line") is not supported
-and will confuse the decompiler. This is because the inlined function's
-references to stack and local variables will affect the caller. I tried to solve
-this limitation by injecting code to save and restore stack and locals on
-function entry/exit, but ran into a Ghidra limitation - the decompiler does not
-inject "uponentry" Pcode into inlined functions.
-- Currently, there is no way to change the C stack pointer after initial analysis
-(attempting to re-analyze the program with a new C stack pointer will not change
-anything).
-- Initial analysis and disassembly can be very slow. This is primarily because
-Ghidra is quite slow at setting large numbers of context registers.
-- Multiple return values are untested and will probably not work.
+**Passive/runtime-positioned segments:** when a segment's destination cannot be determined statically, `WasmLoader` can be called from a Ghidra script with a known runtime offset.
 
-## Internals
+## ⚠️ Known limitations
 
-This module uses a pre-analyzer (WasmPreAnalyzer) to analyze all functions and
-opcodes, providing contextual information to the SLEIGH disassembler to enable
-correct disassembly (for example, operand sizes when they depend on the types in
-the value stack, branch target addresses, etc). In order to support recovery of
-the C stack, this module converts Wasm stack operations into operations on a
-register file. This frees up the decompiler's stack analysis to focus on the
-behaviour of the C stack, since the decompiler only supports a single stack.
-Additionally, parameter passing and returns are handled by virtual input/output
-registers which are copied to/from the stack and locals registers via Pcode
-injection.
+This project aims for useful, correct reverse engineering — not a claim that every WebAssembly proposal and compiler pattern decompiles perfectly.
 
-Four different types of "registers" are defined: input (iN), output (oN), stack
-(sN) and locals (lN). Of these, only the locals will be visible in the
-disassembly; stack registers will appear in the PCode, and input/output
-registers will appear in function types.
+- Ghidra function inlining can confuse WASM stack/local state.
+- Changing the selected C-stack pointer after initial analysis is not seamless.
+- Initial analysis of very large modules can be slow because substantial context is established before disassembly.
+- Multiple return values are not yet considered fully validated.
 
-## Acknowledgements
+A minimal redistributable reproducer is the fastest way to get an analysis problem fixed.
 
-- This plugin borrows loader functionality from this repo: https://github.com/andr3colonel/ghidra_wasm
-- This plugin was directly based on https://github.com/garrettgu10/ghidra-wasm-plugin
+## 🏗️ Development
+
+The repository currently contains the packaged extension plus its source archive. The project is being normalized into a conventional source-first development layout so builds, tests and releases can be reproduced directly from Git.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md), [Architecture](docs/ARCHITECTURE.md), and the [Roadmap](ROADMAP.md).
+
+## 🌳 Lineage & attribution
+
+This project builds on substantial GPL-licensed open-source work:
+
+- [nneonneo/ghidra-wasm-plugin](https://github.com/nneonneo/ghidra-wasm-plugin) — principal upstream implementation.
+- [garrettgu10/ghidra-wasm-plugin](https://github.com/garrettgu10/ghidra-wasm-plugin) — earlier disassembly/decompilation work.
+- [andr3colonel/ghidra_wasm](https://github.com/andr3colonel/ghidra_wasm) — early loader work.
+- [NSA Ghidra](https://github.com/NationalSecurityAgency/ghidra) — the reverse-engineering framework.
+
+The goal is to move this tooling forward while keeping its lineage visible.
+
+## 🤝 Contributing
+
+Compatibility fixes, modern WASM support, SLEIGH/P-code improvements, performance work, test cases and documentation are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## 📄 License
+
+GNU General Public License v3.0. See [LICENSE](LICENSE).
+
+---
+
+<div align="center">
+
+### Reverse WebAssembly where you reverse everything else.
+
+If the project helps your research, a ⭐ makes it easier for other reverse engineers to find.
+
+**[Download](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/releases/latest)** · **[Issues](https://github.com/Ryxm-a/Ghidra-WebAssembly-WASM-Plugin/issues)** · **[Contribute](CONTRIBUTING.md)**
+
+</div>
